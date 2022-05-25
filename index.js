@@ -66,7 +66,17 @@ async function run() {
             const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_KEY)
             res.send({ result, token })
         })
-
+        //check admin 
+        app.get('/admin', async (req, res) => {
+            const email = req.query.email;
+            const query = { email }
+            const user = await usersCollection.findOne(query)
+            if (user.role === 'admin') {
+                return res.send({ isAdmin: true })
+            } else {
+                return res.send({ isAdmin: false })
+            }
+        })
     }
     finally { }
 }
