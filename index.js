@@ -1,7 +1,8 @@
 const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
 const app = express();
+const cors = require('cors');
+// const jwt = require('jsonwebtoken');
+require('dotenv').config();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
@@ -9,15 +10,22 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@cluster0.6euue.mongodb.net/?retryWrites=true&w=majority`;
+
+const uri = `mongodb+srv://${process.env.Db_USER}:${process.env.PASSWORD}@cluster0.6euue.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-
-
 
 async function run() {
     try {
         await client.connect();
-        const userCollection = client.db('bangali-industry').collection('users');
+        const productCollection = client.db("bangaliIndustry").collection("products");
+
+        app.get('/products', async (req, res) => {
+            const query = {};
+            const cursor = await productCollection.find(query);
+            const result = await cursor.toArray()
+            res.send(result)
+            console.log(result)
+        });
 
         app.put('/user/:email', async (req, res) => {
             const email = req.params.email;
@@ -34,6 +42,7 @@ async function run() {
     finally { }
 }
 run().catch(console.dir);
+
 
 app.get('/', (req, res) => {
     res.send("Hey Man")
