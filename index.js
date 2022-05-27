@@ -36,6 +36,7 @@ async function run() {
         const productCollection = client.db("bangaliIndustry").collection("products");
         const usersCollection = client.db("bangaliIndustry").collection("users");
         const ordersCollection = client.db("bangaliIndustry").collection("orders");
+        const reviewsCollection = client.db("bangaliIndustry").collection("reviews");
 
         // all product 
         app.get('/products', async (req, res) => {
@@ -99,6 +100,18 @@ async function run() {
             const result = await ordersCollection.find().toArray()
             res.send(result)
         })
+        //add rating api 
+        app.post('/reviews', async (req, res) => {
+            const data = req.body;
+            const result = await reviewsCollection.insertOne(data)
+            res.send(result)
+        })
+        //get all review
+        app.get('/reviews', async (req, res) => {
+            const result = await reviewsCollection.find().toArray()
+            res.send(result)
+        })
+
 
     }
     finally { }
