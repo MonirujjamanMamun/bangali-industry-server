@@ -46,16 +46,15 @@ async function run() {
 
         app.put('/user/:email', async (req, res) => {
             const email = req.params.email;
-            console.log(email)
             const user = req.body;
             const filter = { email: email };
-            const options = { upsert: true };
             const updateDoc = {
                 $set: user,
             };
-            const result = await userCollection.updateOne(filter, updateDoc, options);
+            const result = await usersCollection.updateOne(filter, updateDoc);
             res.send(result)
         })
+
         //token generate
         app.put('/user', async (req, res) => {
             const email = req.query.email;
@@ -109,6 +108,18 @@ async function run() {
         //get all review
         app.get('/reviews', async (req, res) => {
             const result = await reviewsCollection.find().toArray()
+            res.send(result)
+        })
+        //get user
+        app.get('/user', async (req, res) => {
+            const email = req.query.email;
+            const query = { email }
+            const result = await usersCollection.findOne(query)
+            res.send(result)
+        })
+        //get all user
+        app.get('/users', async (req, res) => {
+            const result = await usersCollection.find().toArray()
             res.send(result)
         })
 
