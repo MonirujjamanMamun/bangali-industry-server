@@ -4,7 +4,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // midell ware 
 app.use(cors());
@@ -36,6 +36,7 @@ async function run() {
         const productCollection = client.db("bangaliIndustry").collection("products");
         const usersCollection = client.db("bangaliIndustry").collection("users");
 
+        // all product 
         app.get('/products', async (req, res) => {
             const result = await productCollection.find().toArray()
             res.send(result)
@@ -76,6 +77,13 @@ async function run() {
             } else {
                 return res.send({ isAdmin: false })
             }
+        })
+        // get single product data 
+        app.get('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await productCollection.findOne(query)
+            res.send(result)
         })
     }
     finally { }
