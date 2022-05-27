@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const stripe = require("stripe")(process.env.PAYMENT_SECRET)
 require('dotenv').config();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
@@ -122,6 +123,28 @@ async function run() {
             const result = await usersCollection.find().toArray()
             res.send(result)
         })
+        //get single order for payment
+        app.get('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await ordersCollection.findOne(query)
+            res.send(result)
+        })
+        //payment
+        app.post("/create-payment-intent", async (req, res) => {
+            const { totalPrice } = req.body;
+
+            // Create a PaymentIntent with the order amount and currency
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount: calculateOrderAmount(items),
+                currency: "usd",
+            });
+
+            res.send({
+                clientSecret: paymentIntent.client_secret,
+            });
+        });
+
 
 
     }
