@@ -35,6 +35,7 @@ async function run() {
         await client.connect();
         const productCollection = client.db("bangaliIndustry").collection("products");
         const usersCollection = client.db("bangaliIndustry").collection("users");
+        const ordersCollection = client.db("bangaliIndustry").collection("orders");
 
         // all product 
         app.get('/products', async (req, res) => {
@@ -85,6 +86,13 @@ async function run() {
             const result = await productCollection.findOne(query)
             res.send(result)
         })
+        //add order to database 
+        app.post('/orders', async (req, res) => {
+            const orderData = req.body;
+            const result = await ordersCollection.insertOne(orderData)
+            res.send(result)
+        })
+
     }
     finally { }
 }
