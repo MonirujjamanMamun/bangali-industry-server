@@ -2,11 +2,12 @@
   "name": "assignment-twelve-server-site",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
-    "start-dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node functions/app.js",
+    "start-dev": "nodemon functions/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "netlify deploy --prod"
   },
   "keywords": [],
   "author": "",
@@ -14,9 +15,12 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
-    "express": "^4.18.1",
+    "express": "^4.19.2",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.6.0",
+    "netlify-cli": "^17.22.1",
+    "netlify-lambda": "^2.0.16",
+    "serverless-http": "^3.2.0",
     "stripe": "^9.5.0"
   }
 }
